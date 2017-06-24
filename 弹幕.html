@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{margin:0;padding:0;}
+		html,body{width: 100%;height: 100%;}
+		body{background:#000;
+			overflow: hidden;}
+		#box{position: absolute;bottom:20px;right:18%;opacity: 0;transition:all 1s;overflow: hidden;}
+		p{position: absolute;color:#fff;white-space: nowrap;font-weight: bold;}
+		#text{height:30px;border:1px solid #ccc;width: 250px;float: left;outline: 0 none;}
+		#btn{height: 32px;width: 50px;border: 1px solid #ccc;outline: 0 none;float: left;background:skyblue;margin-left: -1px;cursor: pointer;}
+		#mp4{height: 100%;width: 100%;overflow: hidden}
+	</style>
+	<script src="addEvent.js"></script>
+</head>
+<body>
+	<video src="imgs/陈绮贞 - 鱼.mp4" id="mp4" autoplay="true"></video>
+	<div id="box">
+		<input type="text" id="text" value=''>
+		<input type="button" value="发送" id="btn">
+	</div>	
+	<script>
+		function random(m,n){
+			return m+Math.floor((n-m+1)*Math.random());
+		}
+		function Barrage(content){
+			this.p=document.createElement('p');
+			document.body.appendChild(this.p)
+			this.color=['green','black','red','gray','pink','purple']
+			this.height=20;
+			this.left=window.innerWidth;
+			this.speed=1;
+			this.p.style.color=this.color[random(0,this.color.length-1)]
+			this.p.style.fontSize='30px';
+			this.top=random(0,20)*this.height;
+			this.p.style.left=this.left+'px';
+			this.p.style.top=this.top+'px';
+			this.p.innerHTML=content['value']
+			this.move();
+		}
+		Barrage.prototype.move=function(){
+			var _this=this;	
+			
+			setInterval(function(){
+				_this.p.style.left=_this.p.offsetLeft-_this.speed+'px';
+				if(_this.p.offsetLeft<-_this.p.offsetWidth){
+					_this.p.parentNode.removeChild(_this.p);
+				}
+			},10)
+			
+		}
+		var btn=document.getElementById('btn');
+		var text=document.getElementById('text');
+		var box=document.getElementById('box');
+		var time=null;
+		function Fade(){
+			box.style.opacity=1;
+			clearTimeout(time)
+			time=setTimeout(function(){
+
+				box.style.opacity=0;
+
+			},3000)
+
+		}
+		addEvent(document,'mousemove',Fade)
+		text.onfocus=function(){
+			console.log('sss')
+			clearTimeout(time)
+			removeEvent(document,'mousemove',Fade)
+		}
+		text.onblur=function(){
+			addEvent(document,'mousemove',Fade)
+		}
+		// addEvent(#)
+		addEvent(btn,'click',function(){	
+			console.log(text['focus'])	
+			if(/^.{1,20}$/gi.test(text['value'])){
+				new Barrage(text);
+				text['value']='';
+				btn['disabled']='true';
+			}else{
+				alert('您输入的字数太多')
+			}
+			setTimeout(function(){			
+				btn['disabled']='';
+			},1000)
+						
+		})
+		addEvent(document,'keydown',function(e){
+			if(e.which==13){
+				btn.click();
+			}
+		})
+	</script>
+</body>
+</html>
