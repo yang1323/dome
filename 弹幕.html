@@ -14,7 +14,17 @@
 		#btn{height: 32px;width: 50px;border: 1px solid #ccc;outline: 0 none;float: left;background:skyblue;margin-left: -1px;cursor: pointer;}
 		#mp4{height: 100%;width: 100%;overflow: hidden}
 	</style>
-	<script src="addEvent.js"></script>
+	<script>
+		function addEvent( ele , type , handler ) {
+			if( ele.addEventListener ) {
+				ele.addEventListener( type , handler);
+			}else if( ele.attachEvent ){
+				ele.attachEvent( 'on' + type , handler);
+			}else {
+				ele['on'+type] = handler;
+			}
+		}
+	</script>
 </head>
 <body>
 	<video src="imgs/陈绮贞 - 鱼.mp4" id="mp4" autoplay="true"></video>
